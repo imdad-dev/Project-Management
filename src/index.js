@@ -15,5 +15,5 @@ app.get("/" , async (req , res)=>{
 
 
 app.listen(PORT , ()=>{
-console.log(`Server is lisnetng at https://localhost:${PORT}`);
+console.log(`Server is lisnetng at http://localhost:${PORT}`);
 })
