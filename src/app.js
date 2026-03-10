@@ -1,6 +1,9 @@
 
 import express  from "express";
 import cors from "cors"
+import healthCheckRoute from "./routes/healthCheck.route.js"
+
+
 const app = express();
 
 //basic configurations --> middleware 
@@ -42,5 +45,9 @@ app.get("/end" , (req , res)=>{
 
    res.status(400).end();
 })
+
+
+//healthCheck route 
+app.use("/api/v1/healthcheck" , healthCheckRoute);
 
 export default app;
