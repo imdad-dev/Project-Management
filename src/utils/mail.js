@@ -1,7 +1,8 @@
 import mailgen from "mailgen";
+import nodemailer from "nodemailer"
 
 /* ------------------------------------------------------------ 
-========= = = =    EMAIL GENERATE  CONTENT   = = = ===============
+========= = = = * *   EMAIL GENERATE  CONTENT  * * = = = ===============
 ----------------------------------------------------------------
 */
   
@@ -47,7 +48,51 @@ const resetPasswordMailgenContent = (username , resetPasswordUrl)=>{
 }
 
 
+/* -----------------  Send Email via nodemailer npm library :: Mailtrap   --------------------- */
+
+const sendEmail = async ( option ) =>{
+  const mailGenerator =  new Mailgen({
+        theme:"default", 
+        product: {
+            name :" Task Manager",
+            link : "https://myCompanylink.com"
+        }
+    })
+
+      const emailTexual= mailGenerator.generatePlaintext(option.mailgenContent);
+
+      const emailHTML = mailGenerator.generate(option.mailgenContent);
+
+       const transporter =nodemailer.createTransport({
+        host:process.env.MAILTRAP_SMTP_HOST ,
+        port : process.env.MAILTRAP_SMTP_PORT , 
+        auth : {
+            user : process.env.MAILTRAP_SMTP_USER ,
+            pass : process.env.MAILTRAP_SMTP_PASS ,
+
+        }
+      })
+const mail = {  
+    from : "YourCompany@example.com" ,
+    to: option.email ,
+    subject : option.subject ,
+    text: emailTexual , 
+    html :emailHTML ,
+}
+
+try {
+   await transporter.sendMail(mail) ;
+} catch (error) {
+   console.error("Email send Falied siliently . Make sure that You have provided your MAILTRAP credentials in the .env file");
+   console.error("Error : " , error); 
+}
+
+}
+
+
+
 export {
       emailVerificationMailgenContent ,
       resetPasswordMailgenContent ,
+      sendEmail ,
 }
