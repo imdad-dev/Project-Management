@@ -29,7 +29,7 @@ return { accessToken , refreshToken};
 
 /**==================Register ====================* */
 const registerUser =asyncHandler ( async (req , res)=>{
-     const {username , email , password , role } = req.body;
+     const {username , email , password ,fullName , role } = req.body;
 
      // check user in DB
      const existedUser = await User.findOne ( {
@@ -44,6 +44,7 @@ const registerUser =asyncHandler ( async (req , res)=>{
           username , 
           email , 
           password , 
+          fullName ,
           role ,
           isEmailVerified : false ,
      })
@@ -97,3 +98,7 @@ const createdUser = await User.findById(user._id).select(
   )
 
 })
+
+export { 
+      registerUser ,
+}

@@ -1,8 +1,11 @@
 
 import express  from "express";
 import cors from "cors"
+//healthcheck Route
 import healthCheckRoute from "./routes/healthCheck.route.js"
 
+// auth route 
+import authRoute from "./routes/auth.route.js"
 
 const app = express();
 
@@ -49,5 +52,8 @@ app.get("/end" , (req , res)=>{
 
 //healthCheck route 
 app.use("/api/v1/healthcheck" , healthCheckRoute);
+
+//auth route 
+app.use("/api/v1/auth" , authRoute);
 
 export default app;
