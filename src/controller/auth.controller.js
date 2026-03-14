@@ -67,15 +67,16 @@ await user.save( { validateBeforeSave : false});
 // finaly Send Email 
 let emailVerificationURL = `${req.protocol}://${req.get("host")}/api/v1/verify-email/${unHashedToken}`
  
-
+console.log ("User: ", user)
+console.log ("EmailVerifyLink--->: ", emailVerificationURL);
 
 await sendEmail ({
      email : user?.email ,
      subject : "Please Verify your email" ,
-     mailgenContent : emailVerificationMailgenContent( {
-          username : user.username ,
-          verificationURL : emailVerificationURL ,
-     })
+     mailgenContent : emailVerificationMailgenContent( 
+             user.username ,
+            emailVerificationURL ,
+     )
 })
 
  //Get the created user without sensitive fields

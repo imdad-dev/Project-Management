@@ -1,4 +1,4 @@
-import mailgen from "mailgen";
+import Mailgen from "mailgen";
 import nodemailer from "nodemailer"
 
 /* ------------------------------------------------------------ 
@@ -7,7 +7,7 @@ import nodemailer from "nodemailer"
 */
   
 const emailVerificationMailgenContent = (username , emailVerificationUrl)=>{
-
+console.log( emailVerificationUrl,username);
     return {
       body: {
         name: username,
@@ -54,7 +54,7 @@ const sendEmail = async ( option ) =>{
   const mailGenerator =  new Mailgen({
         theme:"default", 
         product: {
-            name :" Task Manager",
+            name :"ProjectCampy",
             link : "https://myCompanylink.com"
         }
     })
