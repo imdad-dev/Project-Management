@@ -6,6 +6,8 @@ import healthCheckRoute from "./routes/healthCheck.route.js"
 
 // auth route 
 import authRoute from "./routes/auth.route.js"
+import { userRegisterValidator } from "./validators/auth.js"
+import{ validate} from "./middlewares/validator.middleware.js"
 
 const app = express();
 
@@ -54,6 +56,6 @@ app.get("/end" , (req , res)=>{
 app.use("/api/v1/healthcheck" , healthCheckRoute);
 
 //auth route 
-app.use("/api/v1/auth" , authRoute);
+app.use("/api/v1/auth" ,userRegisterValidator() ,validate , authRoute);
 
 export default app;

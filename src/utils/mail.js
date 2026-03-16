@@ -7,7 +7,7 @@ import nodemailer from "nodemailer"
 */
   
 const emailVerificationMailgenContent = (username , emailVerificationUrl)=>{
-console.log( emailVerificationUrl,username);
+// console.log( emailVerificationUrl,username);
     return {
       body: {
         name: username,

@@ -67,8 +67,8 @@ await user.save( { validateBeforeSave : false});
 // finaly Send Email 
 let emailVerificationURL = `${req.protocol}://${req.get("host")}/api/v1/verify-email/${unHashedToken}`
  
-console.log ("User: ", user)
-console.log ("EmailVerifyLink--->: ", emailVerificationURL);
+// console.log ("User: ", user)
+// console.log ("EmailVerifyLink--->: ", emailVerificationURL);
 
 await sendEmail ({
      email : user?.email ,
