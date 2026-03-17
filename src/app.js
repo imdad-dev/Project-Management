@@ -1,20 +1,21 @@
 
 import express  from "express";
 import cors from "cors"
+import cookieParser from "cookie-parser"
+
 //healthcheck Route
 import healthCheckRoute from "./routes/healthCheck.route.js"
 
 // auth route 
 import authRoute from "./routes/auth.route.js"
-import { userRegisterValidator } from "./validators/auth.js"
-import{ validate} from "./middlewares/validator.middleware.js"
-
+ 
 const app = express();
 
 //basic configurations ---> middleware 
 app.use(express.json( { limit : "16kb"}));
 app.use(express.urlencoded({ extended : true} , { limit : "16kb"}));
 app.use(express.static("public"));
+app.use(cookieParser())
 
 
 // cors configurations 
@@ -56,6 +57,6 @@ app.get("/end" , (req , res)=>{
 app.use("/api/v1/healthcheck" , healthCheckRoute);
 
 //auth route 
-app.use("/api/v1/auth" ,userRegisterValidator() ,validate , authRoute);
-
+app.use("/api/v1/auth" , authRoute);
+ 
 export default app;
