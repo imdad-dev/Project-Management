@@ -12,12 +12,15 @@ const generateAccessAndRefreshTokens = async (userId)=>{
  try {
      
      
-     const user = await user.findOne(userId);
+     const user = await User.findById(userId);
+if (!user) {
+      throw new ApiError(404, "User not found for token generation");
+    }
 
 const accessToken = user.generateAccessToken();
 const refreshToken = user.generateRefreshToken();
 
-user.accessToken = accessToken;
+user.refreshToken = refreshToken ;
 await user.save( { validateBeforeSave : false});
 return { accessToken , refreshToken};
 
@@ -105,7 +108,7 @@ const createdUser = await User.findById(user._id).select(
 
 const loginUser = asyncHandler ( async (req , res)=>{
      const {email , username ,password } = req.body;
-
+ 
      if(!email) {
           throw  new ApiError(400 , 'Email is Required');
      }
@@ -123,7 +126,9 @@ const loginUser = asyncHandler ( async (req , res)=>{
 
      }
 
-     const {accessToken , refreshToken } = generateAccessAndRefreshTokens(user._id)
+    
+     // async function , and create token use await 
+     const {accessToken , refreshToken } =await generateAccessAndRefreshTokens(user._id)
 
      const loggedInUser = await User.findById(user._id).select(
           "-password -refreshToken -emailVerificationToken -emailVerificationExpiry",
