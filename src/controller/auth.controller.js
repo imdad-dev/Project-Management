@@ -5,6 +5,7 @@ import { asyncHandler } from "../utils/async-handler.js";
 import { access } from "fs";
 import {emailVerificationMailgenContent, resetPasswordMailgenContent, sendEmail} from "../utils/mail.js"
 import { create } from "domain";
+import jwt from "jsonwebtoken"
 
 /* -----------Generate Access and RefreshToken separately ---------- */
 

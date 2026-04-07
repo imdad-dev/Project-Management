@@ -11,7 +11,12 @@ resetForgotPassword ,
 changeCurrentPassword
 
 } from  "../controller/auth.controller.js"
-import { userRegisterValidator , userLoginValidator} from "../validators/validator.js"
+import { userRegisterValidator , 
+    userLoginValidator ,
+    userForgotPasswordValidator ,
+    userResetForgotPasswordValidator ,
+
+} from "../validators/validator.js"
 import{ validate} from "../middlewares/validator.middleware.js"
 import {verifyJWT} from "../middlewares/auth.mdl.js"
 
@@ -24,8 +29,8 @@ router.route("/current-user").get(getCurrentUser);
 router.route("/refresh-token").post(verifyJWT , refreshedAccessToken);
 router.route("/verify-email/:verificationToken").get(VerifyEmail)
 router.route("/resend-email-verification").post(resendEmailVerification)
-router.route("/forgot-password").post(validate , forgotPasswordRequest)
-router.route("/reset-password/:resetToken").post(  validate, resetForgotPassword);
- router.route("/change-password").post( validate, changeCurrentPassword);
+router.route("/forgot-password").post( userForgotPasswordValidator() , validate , forgotPasswordRequest)
+router.route("/reset-password/:resetToken").post( userResetForgotPasswordValidator(), validate, resetForgotPassword);
+ router.route("/change-password").post( userChangeCurrentPasswordValidator() , validate, changeCurrentPassword);
 
 export default router;
