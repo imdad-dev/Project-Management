@@ -3,7 +3,7 @@ import { ApiResponse } from "../utils/api-response.js"
  import {ApiError} from "../utils/api-error.js"
 import { asyncHandler } from "../utils/async-handler.js";
 import { access } from "fs";
-import {emailVerificationMailgenContent, sendEmail} from "../utils/mail.js"
+import {emailVerificationMailgenContent, resetPasswordMailgenContent, sendEmail} from "../utils/mail.js"
 import { create } from "domain";
 
 /* -----------Generate Access and RefreshToken separately ---------- */
@@ -343,6 +343,37 @@ return res
      "Mail has been sent to your email ID")
    )
 })
+
+/*===================Forgot Password ================= */
+
+const forgotPasswordRequest =   asyncHandler( async (req , res)=>{
+
+     const { email } = req.body;
+const user = await User.findOne({ email });
+if(!user){
+     throw new ApiError (404, "user does not exist");
+}
+
+
+       const { unHashedToken , hashedToken , tokenExpiry } =  user.generateTemporaryToken();
+
+user.forgotPasswordToken = hashedToken;
+user.forgotPasswordExpiry =tokenExpiry ;
+
+await user.save( { validateBeforeSave : false});
+
+let forgotPasswordRedirectURL = `${process.env.FORGOT_PASSWORD_REDIRECT_URL}/${unHashedToken}`;
+await sendEmail ({
+     email : user?.email ,
+     subject : "Password reset request" ,
+     mailgenContent : resetPasswordMailgenContent( 
+             user.username ,
+            forgotPasswordRedirectURL ,
+     )
+})
+})
+
+
 export { 
       registerUser ,
       loginUser ,
@@ -351,5 +382,6 @@ export {
       refreshedAccessToken ,
       VerifyEmail ,
       resendEmailVerification ,
+      forgotPasswordRequest ,
       
 }
