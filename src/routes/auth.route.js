@@ -4,6 +4,7 @@ import {registerUser ,
     logoutUser ,
     getCurrentUser ,
 refreshedAccessToken ,
+VerifyEmail ,
 } from  "../controller/auth.controller.js"
 import { userRegisterValidator , userLoginValidator} from "../validators/validator.js"
 import{ validate} from "../middlewares/validator.middleware.js"
@@ -16,5 +17,6 @@ router.route("/login").post( userLoginValidator(), validate ,loginUser);
 router.route("/logout").post(verifyJWT  ,logoutUser);
 router.route("/current-user").get(getCurrentUser);
 router.route("/refresh-token").post(verifyJWT , refreshedAccessToken);
+router.route("/verify-email/:verificationToken").get(VerifyEmail)
 
 export default router;

@@ -52,7 +52,7 @@ const registerUser =asyncHandler ( async (req , res)=>{
           isEmailVerified : false ,
      })
 
-     // ------------Email confirmation or verify --------------//
+     // ------------Email confirmation or verify mail --------------//
 
      /*------------Temporary Token ----------------*/
 
@@ -205,6 +205,8 @@ const getCurrentUser = asyncHandler ( async ( req , res)=>{
      )
 })
 
+
+/*===============Refreshed Access Token================= */
 const refreshedAccessToken = asyncHandler ( async ( req , res)=>{
 
      const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken;
@@ -260,11 +262,53 @@ const refreshedAccessToken = asyncHandler ( async ( req , res)=>{
      }
 })
 
+/* ===============Email Verification==================== */
+
+const VerifyEmail = asyncHandler ( async ( req , res)=>{
+const { verificationToken } = req.params;
+
+if(!verificationToken){
+     throw new ApiError(401 , "Verification Token is missing ");
+}
+
+let hashedToken = crypto
+.createHash("sha256")
+.update(verificationToken)
+.digest("hex")
+
+const user = await User.findOne({
+     emailVerificationToken : hashedToken ,
+     emailVerificationExpiry : { $gt : Date.now() }
+});
+
+if(!user){
+     throw new ApiError(401 , "Verification Token is missing or expired.");
+}
+
+user.emailVerificationToken =undefined;
+user.emailVerificationExpiry =undefined;  
+user.isEmailVerified = true;
+
+await user.save({ validateBeforeSave : false});
+
+return res
+.status(200)
+.json(
+     200,
+     { isEmailVerified : true } ,
+     "Email is verified"
+)
+
+})
+// const VerifyEmail = asyncHandler ( async ( req , res)=>{
+
+// })
 export { 
       registerUser ,
       loginUser ,
       logoutUser ,
       getCurrentUser ,
       refreshedAccessToken ,
+      VerifyEmail ,
       
 }
