@@ -22,15 +22,22 @@ import {verifyJWT} from "../middlewares/auth.mdl.js"
 
 const router = Router()
 
+// unsecure route 
 router.route("/register").post( userRegisterValidator() , validate ,registerUser);
 router.route("/login").post( userLoginValidator(), validate ,loginUser);
-router.route("/logout").post(verifyJWT  ,logoutUser);
-router.route("/current-user").get(getCurrentUser);
+ 
+ 
 router.route("/refresh-token").post(verifyJWT , refreshedAccessToken);
 router.route("/verify-email/:verificationToken").get(VerifyEmail)
-router.route("/resend-email-verification").post(resendEmailVerification)
+ 
 router.route("/forgot-password").post( userForgotPasswordValidator() , validate , forgotPasswordRequest)
-router.route("/reset-password/:resetToken").post( userResetForgotPasswordValidator(), validate, resetForgotPassword);
- router.route("/change-password").post( userChangeCurrentPasswordValidator() , validate, changeCurrentPassword);
+ router.route("/reset-password/:resetToken").post(userResetForgotPasswordValidator(), validate, resetForgotPassword);
+
+
+// secure route
+router.route("/logout").post(verifyJWT  ,logoutUser);
+router.route("/current-user").get(verifyJWT , getCurrentUser);
+router.route("/resend-email-verification").post(verifyJWT , resendEmailVerification)
+ router.route("/change-password").post(verifyJWT , userChangeCurrentPasswordValidator() , validate, changeCurrentPassword);
 
 export default router;
