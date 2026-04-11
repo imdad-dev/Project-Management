@@ -15,6 +15,7 @@ import { userRegisterValidator ,
     userLoginValidator ,
     userForgotPasswordValidator ,
     userResetForgotPasswordValidator ,
+    userChangeCurrentPasswordValidator
 
 } from "../validators/validator.js"
 import{ validate} from "../middlewares/validator.middleware.js"
@@ -27,7 +28,7 @@ router.route("/register").post( userRegisterValidator() , validate ,registerUser
 router.route("/login").post( userLoginValidator(), validate ,loginUser);
  
  
-router.route("/refresh-token").post(verifyJWT , refreshedAccessToken);
+router.route("/refresh-token").post(refreshedAccessToken);
 router.route("/verify-email/:verificationToken").get(VerifyEmail)
  
 router.route("/forgot-password").post( userForgotPasswordValidator() , validate , forgotPasswordRequest)

@@ -6,6 +6,7 @@ import { access } from "fs";
 import {emailVerificationMailgenContent, resetPasswordMailgenContent, sendEmail} from "../utils/mail.js"
 import { create } from "domain";
 import jwt from "jsonwebtoken"
+import crypto from "crypto"
 
 /* -----------Generate Access and RefreshToken separately ---------- */
 
@@ -226,7 +227,7 @@ const refreshedAccessToken = asyncHandler ( async ( req , res)=>{
           }
 
           if(incomingRefreshToken !== user?.refreshToken){
-            throw new ApiError(401 ,"Refresh token expire");
+            throw new ApiError(401 ,"Refresh token expiredrs");
           }
 
 
@@ -377,10 +378,12 @@ const resetForgotPassword = asyncHandler(async (req, res) => {
   const { resetToken } = req.params;
   const { newPassword } = req.body;
 
+  console.log(crypto)
   let hashedToken = crypto
     .createHash("sha256")
     .update(resetToken)
     .digest("hex");
+ 
 
   const user = await User.findOne({
     forgotPasswordToken: hashedToken,
